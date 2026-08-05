@@ -136,6 +136,10 @@ export const ToolbarPlugin = (
   // save ref to setText to use it in event listeners safely
   const setText = useRef<any>(props.setText);
 
+  // Track whether the editor is still loading its initial content
+  // so the text-saving listener skips programmatic content loads.
+  const isInitialRender = useRef(true);
+
   useEffect(() => {
     setText.current = props.setText;
   }, [props]);
@@ -245,6 +249,7 @@ export const ToolbarPlugin = (
 
   useEffect(() => {
     if (!props.firstRender) {
+      isInitialRender.current = true;
       editor.update(() => {
         const root = $getRoot();
         if (root) {
@@ -259,6 +264,7 @@ export const ToolbarPlugin = (
           });
         }
       });
+      isInitialRender.current = false;
     }
   }, [props.updateTemplate, props.firstRender]);
 
@@ -274,12 +280,18 @@ export const ToolbarPlugin = (
         root.clear();
         root.append(...nodes);
       });
+      isInitialRender.current = false;
     }
   }, []);
 
   // Register text-saving update listener - always active for each editor instance
+  // Skips programmatic content loads (initial render, template changes) to prevent
+  // persisting backwards-compatibility wrappers as authored content.
   useEffect(() => {
     const unregister = editor.registerUpdateListener(({ editorState }) => {
+      if (isInitialRender.current) {
+        return;
+      }
       editorState.read(() => {
         const textInHtml = $generateHtmlFromNodes(editor)
           .replace(/&lt;/g, "<")
