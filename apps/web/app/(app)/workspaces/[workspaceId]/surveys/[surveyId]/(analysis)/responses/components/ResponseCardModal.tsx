@@ -88,8 +88,9 @@ export const ResponseCardModal = ({
     }
   };
 
-  // If no response is selected or currentIndex is null or invalid, do not render the modal
-  if (selectedResponseId === null || currentIndex === null || currentIndex === -1) return null;
+  // If no response is selected, currentIndex is invalid, or the current index is out of bounds
+  // (e.g., after the last remaining response was deleted), do not render the modal
+  if (selectedResponseId === null || currentIndex === null || currentIndex === -1 || currentIndex >= responses.length) return null;
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
