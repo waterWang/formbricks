@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import { logger } from "@formbricks/logger";
 import { TWorkspace } from "@formbricks/types/workspace";
-import { FORMBRICKS_ENVIRONMENT_ID_LS } from "@/lib/localStorage";
+import { FORMBRICKS_WORKSPACE_ID_LS } from "@/lib/localStorage";
 import { getFormattedErrorMessage } from "@/lib/utils/helper";
 import { truncate } from "@/lib/utils/strings";
 import { Alert, AlertDescription } from "@/modules/ui/components/alert";
@@ -60,14 +60,14 @@ export const DeleteWorkspaceRender = ({
 
       if (deleteWorkspaceResponse?.data) {
         if (organizationWorkspaces.length === 1) {
-          localStorage.removeItem(FORMBRICKS_ENVIRONMENT_ID_LS);
+          localStorage.removeItem(FORMBRICKS_WORKSPACE_ID_LS);
         } else if (organizationWorkspaces.length > 1) {
           // prevents changing of organization when deleting workspace
           const remainingWorkspace = organizationWorkspaces.find(
             (workspace) => workspace.id !== currentWorkspace.id
           );
           if (remainingWorkspace) {
-            localStorage.setItem(FORMBRICKS_ENVIRONMENT_ID_LS, remainingWorkspace.id);
+            localStorage.setItem(FORMBRICKS_WORKSPACE_ID_LS, remainingWorkspace.id);
           }
         }
         toast.success(t("workspace.general.workspace_deleted_successfully"));
