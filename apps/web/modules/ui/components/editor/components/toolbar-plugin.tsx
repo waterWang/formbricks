@@ -245,34 +245,38 @@ export const ToolbarPlugin = (
 
   useEffect(() => {
     if (!props.firstRender) {
-      editor.update(() => {
-        const root = $getRoot();
-        if (root) {
           editor.update(() => {
-            const parser = new DOMParser();
-            // Create a new TextNode
-            const dom = parser.parseFromString(props.getText(), "text/html");
-
-            const nodes = $generateNodesFromDOM(editor, dom);
-            root.clear();
-            root.append(...nodes);
+            const root = $getRoot();
+            if (root) {
+              try {
+                const parser = new DOMParser();
+                const dom = parser.parseFromString(props.getText(), "text/html");
+                const nodes = $generateNodesFromDOM(editor, dom);
+                root.clear();
+                root.append(...nodes);
+              } catch (error) {
+                console.error("Failed to parse HTML into editor nodes:", error);
+              }
+            }
           });
         }
-      });
-    }
-  }, [props.updateTemplate, props.firstRender]);
+      }, [props.updateTemplate, props.firstRender]);
 
   useEffect(() => {
     if (props.setFirstRender && props.firstRender) {
       props.setFirstRender(false);
       editor.update(() => {
-        const parser = new DOMParser();
-        const dom = parser.parseFromString(props.getText(), "text/html");
+        try {
+          const parser = new DOMParser();
+          const dom = parser.parseFromString(props.getText(), "text/html");
 
-        const nodes = $generateNodesFromDOM(editor, dom);
-        const root = $getRoot();
-        root.clear();
-        root.append(...nodes);
+          const nodes = $generateNodesFromDOM(editor, dom);
+          const root = $getRoot();
+          root.clear();
+          root.append(...nodes);
+        } catch (error) {
+          console.error("Failed to parse HTML into editor nodes on first render:", error);
+        }
       });
     }
   }, []);
