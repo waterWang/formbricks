@@ -122,14 +122,6 @@ function NPS({
         }}
         onMouseLeave={() => {
           setHoveredValue(null);
-        }}
-        onFocus={() => {
-          if (!disabled) {
-            setHoveredValue(number);
-          }
-        }}
-        onBlur={() => {
-          setHoveredValue(null);
         }}>
         {colorCoding ? (
           <div className={cn("absolute top-0 left-0 h-[6px] w-full", getNPSOptionColor(number))} />
