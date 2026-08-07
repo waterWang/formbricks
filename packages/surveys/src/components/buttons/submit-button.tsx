@@ -76,7 +76,7 @@ export function SubmitButton({
   useEffect(() => {
     if (buttonRef.current && focus) {
       setTimeout(() => {
-        buttonRef.current?.focus();
+        buttonRef.current?.focus({ preventScroll: true });
       }, 200);
     }
   }, [focus]);
