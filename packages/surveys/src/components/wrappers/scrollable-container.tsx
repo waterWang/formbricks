@@ -12,6 +12,7 @@ interface ScrollableContainerProps {
 
 export interface ScrollableContainerHandle {
   scrollToBottom: () => void;
+  scrollToTop: () => void;
 }
 
 export const ScrollableContainer = forwardRef<ScrollableContainerHandle, ScrollableContainerProps>(
@@ -44,9 +45,14 @@ export const ScrollableContainer = forwardRef<ScrollableContainerHandle, Scrolla
       }
     };
 
-    // Expose only the `scrollToBottom` method to parent components via the forwarded ref
+    // Expose scrollToBottom and scrollToTop methods to parent components via the forwarded ref
     useImperativeHandle(ref, () => ({
       scrollToBottom,
+      scrollToTop: () => {
+        if (containerRef.current) {
+          containerRef.current.scrollTop = 0;
+        }
+      },
     }));
 
     useEffect(() => {
