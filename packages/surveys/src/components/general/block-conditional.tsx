@@ -10,7 +10,7 @@ import { TValidationErrorMap } from "@formbricks/types/surveys/validation-rules"
 import { BackButton } from "@/components/buttons/back-button";
 import { SubmitButton } from "@/components/buttons/submit-button";
 import { ElementConditional } from "@/components/general/element-conditional";
-import { ScrollableContainer } from "@/components/wrappers/scrollable-container";
+import { ScrollableContainer, type ScrollableContainerHandle } from "@/components/wrappers/scrollable-container";
 import {
   getAutoProgressElement,
   shouldHideSubmitButtonForAutoProgress,
@@ -114,6 +114,7 @@ export function BlockConditional({
   const ttcCollectorRef = useRef<TResponseTtc>({});
   const autoProgressingInFlightRef = useRef(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const scrollableContainerRef = useRef<ScrollableContainerHandle>(null);
 
   // Screen-reader/keyboard users continue right where they act: when the card
   // appears after user navigation (or on an autofocus-allowed initial render),
@@ -125,7 +126,12 @@ export function BlockConditional({
     // Defer so the card's content (and any card transition) has rendered.
     const timeoutId = setTimeout(() => {
       requestAnimationFrame(() => {
-        if (containerRef.current) focusFirstControl(containerRef.current);
+        if (containerRef.current) {
+          focusFirstControl(containerRef.current);
+          // Reset scroll position to top so long text content (e.g., CTA cards)
+          // is not scrolled to the bottom due to button autofocus.
+          scrollableContainerRef.current?.scrollToTop();
+        }
       });
     }, 0);
 
@@ -418,7 +424,7 @@ export function BlockConditional({
   return (
     <div ref={containerRef} className={cn("space-y-6", fullSizeCards ? "h-full" : "")}>
       {/* Scrollable container for the entire block */}
-      <ScrollableContainer fullSizeCards={fullSizeCards} disableInternalScroll={isCardless}>
+      <ScrollableContainer ref={scrollableContainerRef} fullSizeCards={fullSizeCards} disableInternalScroll={isCardless}>
         <div className="space-y-6">
           <div className="space-y-6">
             {block.elements.map((element, index) => {
