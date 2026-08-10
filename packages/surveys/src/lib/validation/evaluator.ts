@@ -95,7 +95,9 @@ const getDefaultErrorMessage = (
   if (rule.field) {
     const fieldLabel = getFieldLabel(element, rule.field, languageCode);
     if (fieldLabel) {
-      return `${fieldLabel}: ${baseMessage}`;
+      // Strip trailing colons from label to avoid "Nombre:: Please enter..." double-colon bug
+      const cleanLabel = fieldLabel.replace(/:+$/, "");
+      return `${cleanLabel}: ${baseMessage}`;
     }
   }
 

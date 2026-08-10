@@ -655,6 +655,55 @@ describe("validateElementResponse", () => {
     });
   });
 
+  describe("field-specific error message format", () => {
+    test("should not produce double colon when placeholder ends with colon", () => {
+      const element: TSurveyElement = {
+        id: "contact1",
+        type: TSurveyElementTypeEnum.ContactInfo,
+        headline: { default: "Contact Info" },
+        firstName: { show: true, required: false, placeholder: { default: "Nombre:" } },
+        lastName: { show: true, required: false, placeholder: { default: "Last Name" } },
+        email: { show: true, required: false, placeholder: { default: "Email" } },
+        phone: { show: false, required: false, placeholder: { default: "Phone" } },
+        company: { show: false, required: false, placeholder: { default: "Company" } },
+        required: false,
+        validation: {
+          rules: [{ id: "rule1", type: "email", field: "email", params: {} }],
+        },
+      } as unknown as TSurveyContactInfoElement;
+
+      const result = validateElementResponse(element, ["John", "Doe", "invalid-email", "", ""], "en");
+      expect(result.valid).toBe(false);
+      // Error message should contain single colon, not double
+      const errorMessage = result.errors[0]?.message ?? "";
+      expect(errorMessage).toContain(":");
+      expect(errorMessage).not.toContain("::");
+    });
+
+    test("should produce valid error message format without double colon for normal placeholder", () => {
+      const element: TSurveyElement = {
+        id: "contact2",
+        type: TSurveyElementTypeEnum.ContactInfo,
+        headline: { default: "Contact Info" },
+        firstName: { show: true, required: false, placeholder: { default: "First Name" } },
+        lastName: { show: true, required: false, placeholder: { default: "Last Name" } },
+        email: { show: true, required: false, placeholder: { default: "Email" } },
+        phone: { show: false, required: false, placeholder: { default: "Phone" } },
+        company: { show: false, required: false, placeholder: { default: "Company" } },
+        required: false,
+        validation: {
+          rules: [{ id: "rule1", type: "email", field: "email", params: {} }],
+        },
+      } as unknown as TSurveyContactInfoElement;
+
+      const result = validateElementResponse(element, ["John", "Doe", "invalid-email", "", ""], "en");
+      expect(result.valid).toBe(false);
+      const errorMessage = result.errors[0]?.message ?? "";
+      expect(errorMessage).toMatch(/^First Name: /);
+      expect(errorMessage).not.toContain("::");
+    });
+  });
+
   describe("field-specific validation for Address", () => {
     test("should validate specific field in address element", () => {
       const element: TSurveyElement = {
