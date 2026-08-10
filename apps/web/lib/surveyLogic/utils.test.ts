@@ -277,6 +277,13 @@ describe("surveyLogic", () => {
     expect(evaluateLogic(mockSurvey, { f: "foo" }, vars, group(baseCond("doesNotEqual", "bar")), "en")).toBe(
       true
     );
+    // doesNotEqual with single-element array (MultipleChoiceMulti) — regression for #8527
+    expect(
+      evaluateLogic(mockSurvey, { f: ["foo"] }, vars, group(baseCond("doesNotEqual", "foo")), "en")
+    ).toBe(false);
+    expect(
+      evaluateLogic(mockSurvey, { f: ["foo"] }, vars, group(baseCond("doesNotEqual", "bar")), "en")
+    ).toBe(true);
     expect(evaluateLogic(mockSurvey, { f: "foo" }, vars, group(baseCond("contains", "o")), "en")).toBe(true);
     expect(evaluateLogic(mockSurvey, { f: "foo" }, vars, group(baseCond("doesNotContain", "z")), "en")).toBe(
       true

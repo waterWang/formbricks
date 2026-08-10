@@ -329,13 +329,10 @@ const evaluateSingleCondition = (
           }
         }
 
-        return (
-          (Array.isArray(leftValue) &&
-            leftValue.length === 1 &&
-            typeof rightValue === "string" &&
-            !leftValue.includes(rightValue)) ||
-          leftValue !== rightValue
-        );
+        if (Array.isArray(leftValue) && leftValue.length === 1 && typeof rightValue === "string") {
+          return !leftValue.includes(rightValue);
+        }
+        return leftValue !== rightValue;
       case "contains":
         return String(leftValue).includes(String(rightValue));
       case "doesNotContain":
