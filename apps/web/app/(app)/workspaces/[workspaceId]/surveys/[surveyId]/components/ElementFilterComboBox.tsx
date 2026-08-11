@@ -35,6 +35,37 @@ const getOptionValue = (option: string | TI18nString): string => {
     : option;
 };
 
+// Map of hardcoded filter condition strings to their i18n translation keys.
+// These keys are defined under "workspace.surveys.filter.conditions" in the
+// locale files. Values not present in the map (e.g. numeric ratings) are
+// returned unchanged.
+const FILTER_CONDITION_KEYS: Record<string, string> = {
+  is: "workspace.surveys.filter.conditions.is",
+  "Includes either": "workspace.surveys.filter.conditions.includes_either",
+  "Includes all": "workspace.surveys.filter.conditions.includes_all",
+  "Is equal to": "workspace.surveys.filter.conditions.is_equal_to",
+  "Is less than": "workspace.surveys.filter.conditions.is_less_than",
+  "Is more than": "workspace.surveys.filter.conditions.is_more_than",
+  Submitted: "workspace.surveys.filter.conditions.submitted",
+  Skipped: "workspace.surveys.filter.conditions.skipped",
+  Equals: "workspace.surveys.filter.conditions.equals",
+  "Not equals": "workspace.surveys.filter.conditions.not_equals",
+  "Filled out": "workspace.surveys.filter.conditions.filled_out",
+  Clicked: "workspace.surveys.filter.conditions.clicked",
+  Dismissed: "workspace.surveys.filter.conditions.dismissed",
+  Applied: "workspace.surveys.filter.conditions.applied",
+  "Not applied": "workspace.surveys.filter.conditions.not_applied",
+  Accepted: "workspace.surveys.filter.conditions.accepted",
+};
+
+// Translate a filter condition value for display. The underlying stored value
+// stays in English (comparison logic in surveys.ts relies on it), only the
+// rendered label is localized.
+const translateFilterCondition = (t: (key: string) => string, value: string): string => {
+  const key = FILTER_CONDITION_KEYS[value];
+  return key ? t(key) : value;
+};
+
 type ElementFilterComboBoxProps = {
   filterOptions: (string | TI18nString)[] | undefined;
   filterComboBoxOptions: (string | TI18nString)[] | undefined;
@@ -138,7 +169,7 @@ export const ElementFilterComboBox = ({
     if (!filterOptions || filterOptions.length <= 1) {
       return (
         <div className="flex h-9 max-w-fit items-center rounded-md rounded-r-none border-r border-slate-300 bg-white px-2 text-sm text-slate-600">
-          <p className="mr-1 max-w-[50px] truncate sm:max-w-[100px]">{filterValue}</p>
+          <p className="mr-1 max-w-[50px] truncate sm:max-w-[100px]">{translateFilterCondition(t, filterValue ?? "")}</p>
         </div>
       );
     }
@@ -154,7 +185,7 @@ export const ElementFilterComboBox = ({
             disabled ? "opacity-50" : "cursor-pointer hover:bg-slate-50"
           )}>
           {filterValue ? (
-            <p className="max-w-[50px] truncate sm:max-w-[80px]">{filterValue}</p>
+            <p className="max-w-[50px] truncate sm:max-w-[80px]">{translateFilterCondition(t, filterValue)}</p>
           ) : (
             <p className="text-slate-400">{t("common.select")}...</p>
           )}
@@ -168,7 +199,7 @@ export const ElementFilterComboBox = ({
                 key={`${optionValue}-${index}`}
                 className="cursor-pointer"
                 onClick={() => onChangeFilterValue(optionValue)}>
-                {optionValue}
+                {translateFilterCondition(t, optionValue)}
               </DropdownMenuItem>
             );
           })}

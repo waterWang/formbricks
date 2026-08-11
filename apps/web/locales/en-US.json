@@ -3597,7 +3597,25 @@
       "filter": {
         "complete_and_partial_responses": "Complete and partial responses",
         "complete_responses": "Complete responses",
-        "partial_responses": "Partial responses"
+        "partial_responses": "Partial responses",
+        "conditions": {
+          "is": "is",
+          "includes_either": "Includes either",
+          "includes_all": "Includes all",
+          "is_equal_to": "Is equal to",
+          "is_less_than": "Is less than",
+          "is_more_than": "Is more than",
+          "submitted": "Submitted",
+          "skipped": "Skipped",
+          "equals": "Equals",
+          "not_equals": "Not equals",
+          "filled_out": "Filled out",
+          "clicked": "Clicked",
+          "dismissed": "Dismissed",
+          "applied": "Applied",
+          "not_applied": "Not applied",
+          "accepted": "Accepted"
+        }
       },
       "new_survey": "New Survey",
       "no_other_workspaces_available": "No other workspaces available to copy this survey to.",
