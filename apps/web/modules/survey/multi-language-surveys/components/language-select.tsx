@@ -91,7 +91,7 @@ export function LanguageSelect({ language, onLanguageChange, disabled, locale }:
           {filteredItems.map((item) => (
             <button
               type="button"
-              className="block w-full cursor-pointer rounded-md px-4 py-2 text-left text-slate-700 hover:bg-slate-100 active:bg-blue-100"
+              className="block w-full cursor-pointer truncate rounded-md px-4 py-2 text-left text-slate-700 hover:bg-slate-100 active:bg-blue-100"
               key={item.code}
               onClick={() => {
                 handleOptionSelect(item);
