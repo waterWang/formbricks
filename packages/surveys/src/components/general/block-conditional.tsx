@@ -42,7 +42,7 @@ const focusFirstControl = (root: HTMLElement, preferInvalid = false): void => {
       )
     : null;
   const target = invalidTarget ?? root.querySelector<HTMLElement>(FOCUSABLE_CONTROL_SELECTOR);
-  target?.focus({ preventScroll: preferInvalid });
+  target?.focus({ preventScroll: true });
 };
 
 interface BlockConditionalProps {
