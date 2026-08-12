@@ -245,14 +245,6 @@ function Rating({
         }}
         onMouseLeave={() => {
           setHoveredValue(null);
-        }}
-        onFocus={() => {
-          if (!disabled) {
-            setHoveredValue(number);
-          }
-        }}
-        onBlur={() => {
-          setHoveredValue(null);
         }}>
         {colorCoding ? (
           <div
